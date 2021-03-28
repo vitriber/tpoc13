@@ -3,19 +3,19 @@
 
 #include <string>
 
+using namespace std;
+
 namespace Components{
 
 	class Word{
 		private:
-			std::string word;
+			string word;
+
 		public:
 			Word();
-
-			std::string getWord();
-			void setWord(std::string word);
+			string getWord();
+			void setWord(string word);
 	};
-
 }
 
 #endif
-

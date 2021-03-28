@@ -1,17 +1,17 @@
 #include "Word.hpp"
 
-namespace Components{
+using namespace std;
 
-	Word::Word(){
+namespace Components{
+	Word::Word() {
 		this->word = "";
 	}
 
-	std::string Word::getWord(){
+	string Word::getWord(){
 		return this->word;
 	}
 
-	void Word::setWord(std::string word){
+	void Word::setWord(string word) {
 		this->word = word;
 	}
-
 }

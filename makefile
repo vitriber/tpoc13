@@ -1,48 +1,25 @@
-# Variables
-CC=g++
-CFLAGS=-Wall -g
-EXEC=./tp3 
-BUILD=./build/
-SRC=./src/
-INCLUDE=./inc/
-COMP=Components/
+all: tp03 clean
 
-# Variable expansions
-OBJETOS:=$(patsubst $(SRC)%cpp, $(BUILD)%o, $(wildcard $(SRC)$(COMP)*.cpp))
-OBJ_COMPIL_COMMAND=$(CC) $(CFLAGS) -I $(INCLUDE)$(COMP) -c $< -o $@
+tp03: block.o cpu.o memoryCache.o memoryData.o word.o main.o
+	g++ -w block.o cpu.o memoryCache.o memoryData.o word.o main.o -o tp03
 
-# Rules
-$(EXEC):	$(BUILD)main.o
-	$(CC) $(CFLAGS) -o $(EXEC) $(BUILD)main.o $(BUILD)$(COMP)*.o 
+block.o: Block.cpp Block.hpp Word.cpp Word.hpp
+	g++ -w -c Block.cpp Block.hpp Word.cpp Word.hpp
 
-$(BUILD)$(COMP) ::
-	@-mkdir --parents $@
+cpu.o: CPU.cpp CPU.hpp MemoryCache.hpp MemoryCache.cpp Block.cpp Block.hpp Word.cpp Word.hpp MemoryData.cpp MemoryData.hpp
+	g++ -w -c CPU.cpp CPU.hpp MemoryCache.hpp MemoryCache.cpp Block.cpp Block.hpp Word.cpp Word.hpp MemoryData.cpp MemoryData.hpp
 
-$(BUILD)main.o:	$(BUILD)$(COMP) $(SRC)main.cpp $(OBJETOS)
-	$(CC) $(CFLAGS) -I $(INCLUDE)$(COMP) -c $(SRC)main.cpp -o $(BUILD)main.o
+memoryCache.o: MemoryCache.cpp MemoryCache.hpp Block.cpp Block.hpp Word.cpp Word.hpp MemoryData.cpp MemoryData.hpp
+	g++ -w -c MemoryCache.cpp MemoryCache.hpp Block.cpp Block.hpp Word.cpp Word.hpp MemoryData.cpp MemoryData.hpp
 
-$(BUILD)%.o :: $(SRC)%.cpp $(INCLUDE)%.hpp
-	$(OBJ_COMPIL_COMMAND)
+memoryData.o: MemoryData.cpp MemoryData.hpp Block.cpp Block.hpp Word.cpp Word.hpp
+	g++ -w -c MemoryData.cpp MemoryData.hpp Block.cpp Block.hpp Word.cpp Word.hpp
 
-.PHONY: clean mem
-clean ::
-	$(info Deleting all the directories and subfolders:)
-	$(info $(BUILD))
-	@echo
-	@echo Are you sure? \(Y/N\)
-	@read choice && \
-	if [[ "$$choice" = "y" ]] || [[ "$$choice" = "Y" ]]; then \
-	{ rm --verbose --preserve-root --recursive $(BUILD) && \
-		rm --verbose --preserve-root $(EXEC) && \
-		echo Cleaning successful.; } || \
-		{ let "status = $$?"; \
-			echo Cleaning of some directory failed; \
-			echo Shell exit status: $$status; \
-			exit $$status; \
-		} \
-	else \
-	echo No cleaning was performed.; \
-	fi
+word.o: Word.cpp Word.hpp
+	g++ -w -c Word.cpp Word.hpp
 
-mem:
-	valgrind --leak-check=full --show-leak-kinds=all $(EXEC) ./testcases/EX1.txt
+main.o: CPU.cpp CPU.hpp MemoryCache.hpp MemoryCache.cpp Block.cpp Block.hpp Word.cpp Word.hpp MemoryData.cpp MemoryData.hpp
+	g++ -w -c CPU.cpp CPU.hpp MemoryCache.hpp MemoryCache.cpp Block.cpp Block.hpp Word.cpp Word.hpp MemoryData.cpp MemoryData.hpp
+
+clean:
+	rm block.o cpu.o memoryCache.o memoryData.o word.o main.o

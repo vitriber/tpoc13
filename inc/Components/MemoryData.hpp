@@ -1,27 +1,23 @@
 #ifndef MEMDADOS_H
 #define MEMDADOS_H
 
-#include "Bloc.hpp"
+#include "Block.hpp"
+
+using namespace std;
 
 namespace Components {
-
-typedef std::vector<Bloc*> blocos;
-
-	class MemDados {
+	class MemoryData {
 		private:
-			const unsigned int m_bloc_in(const unsigned int p_pos);
+			const int m_block_in(const int p_pos);
+			vector<Block*>* m_dados;
 
-			blocos* m_dados;
 		public:
-			static const unsigned int kmendata_size = 256;
-
-			MemDados();
-			~MemDados();
-
-			Bloc* read(const unsigned int p_pos);
-			void write(Bloc* p_bloc);
+			MemoryData();
+			~MemoryData();
+			Block* read(const int p_pos);
+			void write(Block* p_block);
+			static const int kmendata_size = 256;
 	};
-
 }
 
 #endif
