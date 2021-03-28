@@ -1,21 +1,21 @@
-#ifndef PALAVRA_H
-#define PALAVRA_H
+#ifndef WORD_H
+#define WORD_H
 
 #include <string>
+
+using namespace std;
 
 namespace Components{
 
 	class Word{
 		private:
-			std::string word;
+			string word;
+
 		public:
 			Word();
-
-			std::string getWord();
-			void setWord(std::string word);
+			string getWord();
+			void setWord(string word);
 	};
-
 }
 
 #endif
-

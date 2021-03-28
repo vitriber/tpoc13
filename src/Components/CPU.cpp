@@ -1,90 +1,95 @@
 #include "CPU.hpp"
 
+using namespace std;
+
 namespace Components{
-
-	CPU::~CPU(){
-		delete this->memCache;
-	}
-
-	CPU::CPU(){
+	CPU::CPU() {
 		this->readings=0;
 		this->writings=0;
 		this->misses=0;
 		this->hits=0;
 		this->flag = true;
-		this->memCache = new Components::MemCache();
+		this->MemoryCache = new Components::MemoryCache();
 	}
 
-	void CPU::readCache(unsigned int position){
+	CPU::~CPU(){
+		delete this->MemoryCache;
+	}
+
+	void CPU::readCache(int position){
 		this->readings++;
-		bool hit = this->memCache->read(position);
-		if(hit){
+		bool hit = this->MemoryCache->read(position);
+		if (hit) {
 			this->hits++;
-		} else{
+		}
+		else {
 			this->misses++;
 		}
-		std::string line = std::to_string(position);
+		string line = to_string(position);
 		line.append(" 0 ");
-		if(hit){
+		if (hit) {
 			line.append("H");
-		}else{
+		}
+		else {
 			line.append("M");
 		}
 		writeTempFile(line);
 	}
 
-	void CPU::writeCache(unsigned int position, std::string data){
+	void CPU::writeCache(int position, string data){
 		this->writings++;
-		this->memCache->write(position,data);
+		this->MemoryCache->write(position,data);
 
-		std::string line = std::to_string(position);
+		string line = to_string(position);
 		line.append(" 1 ");
 		line.append(data);
 		line.append(" W");
 		writeTempFile(line);
 	}
 
-	void CPU::writeTempFile(std::string line){
-		std::fstream saida;
-		saida.open(nameTempFile, std::ofstream::app);
-		if(saida.is_open()){
-			saida<<line<<std::endl;
-			saida.close();
-		}else{
-			std::cout<<"Não foi possivel abrir o arquivo temporario"<<std::endl;
+	void CPU::writeTempFile(string line){
+		fstream exit;
+		exit.open(nameTempFile, ofstream::app);
+		if (exit.is_open()) {
+			exit << line << endl;
+			exit.close();
 		}
-		
+		else {
+			cout << "Nao foi possivel abrir o arquivo temporario" << endl;
+		}
 	}
 
 	void CPU::writeFinalFile(){
-		std::fstream saida, arqTemp;
-		saida.open(nameFinalFile, std::ofstream::out);
-		if(saida.is_open()){
+		fstream exit, tempFile;
+		exit.open(nameFinalFile, ofstream::out);
+		if (exit.is_open()) {
 			double hitRate = ((double)this->hits)/(this->readings);
 			double missRate = ((double)this->misses)/this->readings;
-			saida<<"READS: "<<this->readings<<std::endl;
-			saida<<"WRITES: "<<this->writings<<std::endl;
-			saida<<"HITS: "<<this->hits<<std::endl;
-			saida<<"MISSES: "<<this->misses<<std::endl;
-			saida<<"HIT RATE: "<<std::fixed<<std::setprecision(3)<<hitRate<<std::endl;
-			saida<<"MISS RATE: "<<std::fixed<<std::setprecision(3)<<missRate<<std::endl;
-			saida<<std::endl;
+			exit << "READS: " << this->readings << endl;
+			exit << "WRITES: " << this->writings << endl;
+			exit << "HITS: " << this->hits << endl;
+			exit << "MISSES: " << this->misses << endl;
+			exit << "HIT RATE: " << fixed<< setprecision(3) << hitRate << endl;
+			exit << "MISS RATE: " << fixed<< setprecision(3) << missRate << endl;
+			exit << endl;
 
-			arqTemp.open(nameTempFile, std::ofstream::in);
-			if(arqTemp.is_open()){
-				std::string line;
-				while (std::getline(arqTemp, line)) {
-				saida<<line<<std::endl;
+			tempFile.open(nameTempFile, ofstream::in);
+			if(tempFile.is_open()){
+				string line;
+				while (getline(tempFile, line)) {
+				exit<<line<<endl;
 				}
-				arqTemp.close();
-				remove(nameTempFile);
-			}else{
-				std::cout<<"Não foi possivel abrir o arquivo temporario"<<std::endl;
+				tempFile.close();
+				remove(this->nameTempFile);
+			}
+			else {
+				cout << "Nao foi possivel abrir o arquivo temporario" << endl;
 			}
 			
-			saida.close();
-		}else{
-			std::cout<<"Não foi possivel abrir o arquivo final"<<std::endl;
+			exit.close();
+		}
+		else {
+			cout << "Nao foi possivel abrir o arquivo final" << endl;
 		}
 	}
 }

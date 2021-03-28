@@ -1,33 +1,31 @@
 #ifndef MEMORYCACHE_H	
 #define MEMORYCACHE_H
 
-#include "Bloc.hpp"
-#include "MemoryData.hpp"
-
 #include <string>
 #include <vector>
+#include "Block.hpp"
+#include "MemoryData.hpp"
 
-namespace Components{
+using namespace std;
 
-	class MemCache{
+namespace Components {
+	class MemoryCache {
 		private:
-			blocos* m_blocos;
-			MemDados* m_MD;
-			Bloc* m_read_MD(const unsigned int p_pos);
-			void m_write_MD(Bloc* p_bloc);
+			vector<Block*>* m_blocks;
+			MemoryData* m_MD;
+			Block* m_read_MD(const int p_pos);
+			void m_write_MD(Block* p_block);
+			static const int m_calc_tag(const int p_pos);
+			static const int m_block_in(const int p_pos);
+			static const int m_word_in(const int p_pos);
 
-			static const unsigned int m_calc_tag(const unsigned int p_pos);
-			static const unsigned int m_bloc_in(const unsigned int p_pos);
-			static const unsigned int m_word_in(const unsigned int p_pos);
 		public:
-			static const unsigned int kmencache_size = 64;
-
-			MemCache();
-			~MemCache();
-			bool read(const unsigned int p_pos);
-			void write(const unsigned int p_pos, std::string p_dado);
+			MemoryCache();
+			~MemoryCache();
+			bool read(const int p_pos);
+			void write(const int p_pos, string p_dado);
+			static const int kmencache_size = 64;
 	};
-
 }
 
 #endif

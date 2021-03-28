@@ -2,39 +2,42 @@
 #include <iostream>
 #include <fstream>
 #include "CPU.hpp"
-   
+
+using namespace std;
+
 int main(int argc, char *argv[]){
-	if(argc <= 1){
-		std::cout<< "Por favor insira o arquivo de entrada"<<std::endl;
+	if (argc <= 1) {
+		cout << "Por favor insira o arquivo de entrada" << endl;
 	}
-	else{
-		std::string file = argv[1];
-		std::fstream fs;
-		fs.open(file, std::fstream::in);
+	else {
+		string file = argv[1];
+		fstream fs;
+		fs.open(file, fstream::in);
 
-		if(fs.is_open()){
+		if (fs.is_open()) {
 			Components::CPU* cpu = new Components::CPU();
-	  		while(!fs.eof()){
-
+	  		while (!fs.eof()) {
 				bool intructionType;
-	  			unsigned int position;
+	  			int position;
 	  			
-	  			fs>>position;
-	  			fs>>intructionType;
+	  			fs >> position;
+	  			fs >> intructionType;
 				  
-	  			if(intructionType){
-	  				std::string data;
-	  				fs>>data;
+	  			if (intructionType) {
+	  				string data;
+	  				fs >> data;
 	  				cpu->writeCache(position,data);
-	  			}else{
+	  			}
+				else {
 	  				cpu->readCache(position);
 	  			}
 	  		}
 	  		cpu->writeFinalFile();
 	  		delete cpu;
 	  		fs.close();
- 		 }else{
-    		std::cout<< "Ocorreu um erro ao abrir o arquivo"<<std::endl;
+ 		 }
+		  else {
+    		cout << "Ocorreu um erro ao abrir o arquivo" << endl;
     		fs.close();
     		system("PAUSE");
   		}

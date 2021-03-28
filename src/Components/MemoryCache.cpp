@@ -1,113 +1,103 @@
 #include "MemoryCache.hpp"
-
 #include <iostream>
 
+using namespace std;
+
 namespace Components {
+	MemoryCache::MemoryCache() {
+		m_MD = new MemoryData();
 
-MemCache::MemCache() {
-	m_MD = new MemDados();
-
-	m_blocos = new blocos(kmencache_size);
-	unsigned int i = 0;
-	for(; i < m_blocos->size(); i++) {
-		m_blocos->at(i) = new Bloc();
+		m_blocks = new vector<Block*>(kmencache_size);
+		unsigned int i = 0;
+		for (; i < m_blocks->size(); i++) {
+			m_blocks->at(i) = new Block();
+		}
 	}
-}
 
+	MemoryCache::~MemoryCache() {
+		unsigned int i = 0;
+		for(; i < m_blocks->size(); i++) {
+			delete m_blocks->at(i);
+		}
+		m_blocks->clear();
 
-MemCache::~MemCache() {
-	unsigned int i = 0;
-	for(; i < m_blocos->size(); i++) {
-		delete m_blocos->at(i);
+		delete m_blocks;
+		delete m_MD;
 	}
-	m_blocos->clear();
-	delete m_blocos;
 
-	delete m_MD;
-}
+	bool MemoryCache::read(const int p_pos) {
+		bool hit = false;
+		const int pos_blocko = m_block_in(p_pos);
 
+		Block* bloco_atual = m_blocks->at(pos_blocko);
 
-bool MemCache::read(const unsigned int p_pos) {
-	bool hit = false;
-	const unsigned int pos_bloco = m_bloc_in(p_pos);
-
-	Bloc* bloco_atual = m_blocos->at(pos_bloco);
-
-	if (bloco_atual->getValidBit()) {
-		if(bloco_atual->getTag() == m_calc_tag(p_pos)) {
-			hit = true;
-		} 
+		if (bloco_atual->getValidBit()) {
+			if(bloco_atual->getTag() == m_calc_tag(p_pos)) {
+				hit = true;
+			} 
+			else {
+				hit = false;
+			}
+		}
 		else {
 			hit = false;
 		}
-	}
 
-	else {
-		hit = false;
-	}
-
-	if(!hit) {
-		bloco_atual->setBloc(m_read_MD(p_pos));
-	}
-	
-	return hit;
-}
-
-void MemCache::write(const unsigned int p_pos, std::string p_dado) {
-
-	const unsigned int pos_bloco = m_bloc_in(p_pos);
-
-	bool hit = false; 
-	Bloc* bloco_atual = m_blocos->at(pos_bloco);
-
-	if (!bloco_atual->getValidBit()) { 
-		bloco_atual->setValidBit(true);
-	}
-	else if(!bloco_atual->getDirtyBit() == m_calc_tag(p_pos)) {
-		if (bloco_atual->getTag() == pos_bloco) {
-			bloco_atual->setDirtyBit(true);
-			hit = true;
+		if(!hit) {
+			bloco_atual->setBlock(m_read_MD(p_pos));
 		}
+		
+		return hit;
 	}
 
-	else { 
-		if (bloco_atual->getTag() == m_calc_tag(p_pos)) {
-			hit = true;
+	void MemoryCache::write(const int p_pos, string p_dado) {
+		const int pos_blocko = m_block_in(p_pos);
+
+		bool hit = false; 
+		Block* bloco_atual = m_blocks->at(pos_blocko);
+
+		if (!bloco_atual->getValidBit()) { 
+			bloco_atual->setValidBit(true);
 		}
+		else if (!bloco_atual->getDirtyBit() == m_calc_tag(p_pos)) {
+			if (bloco_atual->getTag() == pos_blocko) {
+				bloco_atual->setDirtyBit(true);
+				hit = true;
+			}
+		}
+
 		else { 
-			m_write_MD(bloco_atual); 
+			if (bloco_atual->getTag() == m_calc_tag(p_pos)) {
+				hit = true;
+			}
+			else { 
+				m_write_MD(bloco_atual); 
+			}
+		}
+
+		if (!hit) {
+			bloco_atual->setBlock(m_read_MD(p_pos));
+			bloco_atual->setDirtyBit(false);
 		}
 	}
 
-	if (!hit) {
-		bloco_atual->setBloc(m_read_MD(p_pos));
-		bloco_atual->setDirtyBit(false);
-	}
-}
-
-
-Bloc* MemCache::m_read_MD(const unsigned int p_pos) {
+	Block* MemoryCache::m_read_MD(const int p_pos) {
 		return m_MD->read(p_pos);
-}
+	}
 
+	void MemoryCache::m_write_MD(Block* p_block) {
+		m_MD->write(p_block);
+	}
 
-void MemCache::m_write_MD(Bloc* p_bloc) {
-	m_MD->write(p_bloc);
-}
+	const int MemoryCache::m_block_in(const int p_pos) {
+		return (m_calc_tag(p_pos)) % kmencache_size;
+	}
 
+	const int MemoryCache::m_word_in(const int p_pos) {
+		return p_pos % Block::kblock_size;
+	}
 
-const unsigned int MemCache::m_bloc_in(const unsigned int p_pos) {
-	return (m_calc_tag(p_pos)) % kmencache_size;
-}
-
-
-const unsigned int MemCache::m_word_in(const unsigned int p_pos) {
-	return p_pos % Bloc::kbloc_size;
-}
-
-
-const unsigned int MemCache::m_calc_tag(const unsigned int p_pos) {
-	return ((unsigned int) (p_pos / Bloc::kbloc_size));
-}
-
+	const int MemoryCache::m_calc_tag(const int p_pos) {
+		return ((int) (p_pos / Block::kblock_size));
+	}
 }

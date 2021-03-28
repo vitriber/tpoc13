@@ -7,27 +7,29 @@
 #include <cstring>
 #include "MemoryCache.hpp"
 
-namespace Components{
-	class CPU{
-	private:
-		static constexpr const char* nameFinalFile = "./output/result.txt";
-		static constexpr const char* nameTempFile  = "./output/resultTemp.txt";
+using namespace std;
 
-		void writeTempFile(std::string line);
-		Components::MemCache* memCache;
-		unsigned int readings;
-		unsigned int writings;
-		unsigned int misses;
-		unsigned int hits;	
-		bool flag;
-	public:
-		void readCache(unsigned int position);
-		void writeCache(unsigned int position, std::string data);
-		void writeFinalFile();
-		~CPU();
-		CPU();
+namespace Components {
+	class CPU {
+		private:
+			static constexpr const char* nameFinalFile = "./output/result.txt";
+			static constexpr const char* nameTempFile = "./output/resultTemp.txt";
+
+			void writeTempFile(string line);
+			Components::MemoryCache* MemoryCache;
+			int readings;
+			int writings;
+			int misses;
+			int hits;
+			bool flag;
+
+		public:
+			CPU();
+			~CPU();
+			void readCache(int position);
+			void writeCache(int position, string data);
+			void writeFinalFile();
 	};
-	
 }
 
 #endif
