@@ -5,7 +5,7 @@
 namespace Components {
 	MemoryData::MemoryData() {
 		m_dados = new vector<Block*>(kmendata_size);
-		int i = 0;
+		unsigned int i = 0;
 		for(; i < m_dados->size(); i++) {
 			m_dados->at(i) = new Block();
 			m_dados->at(i)->setTag(i);
@@ -14,7 +14,7 @@ namespace Components {
 	}
 
 	MemoryData::~MemoryData() {
-		int i = 0;
+		unsigned int i = 0;
 		for (; i < m_dados->size(); i++) {
 			delete m_dados->at(i);
 		}

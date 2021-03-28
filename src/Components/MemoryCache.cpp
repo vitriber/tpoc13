@@ -8,14 +8,14 @@ namespace Components {
 		m_MD = new MemoryData();
 
 		m_blocks = new vector<Block*>(kmencache_size);
-		int i = 0;
+		unsigned int i = 0;
 		for (; i < m_blocks->size(); i++) {
 			m_blocks->at(i) = new Block();
 		}
 	}
 
 	MemoryCache::~MemoryCache() {
-		int i = 0;
+		unsigned int i = 0;
 		for(; i < m_blocks->size(); i++) {
 			delete m_blocks->at(i);
 		}

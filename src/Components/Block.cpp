@@ -9,7 +9,7 @@ namespace Components{
 		this->m_tag = 0;
 
 		m_block = new words(kblock_size);
-		int i = 0;
+		unsigned int i = 0;
 		for (; i < kblock_size; i++) {
 			Word* word = new Word();
 			this->m_block->at(i) = word;
@@ -17,7 +17,7 @@ namespace Components{
 	}
 
 	Block::~Block() {
-		int i = 0;
+		unsigned int i = 0;
 		for (; i < m_block->size(); i++) {
 			delete m_block->at(i);
 		}
@@ -62,7 +62,7 @@ namespace Components{
 		this->m_bitValid = p_block->getValidBit();
 		this->m_tag = p_block->getTag();
 
-		int i = 0;
+		unsigned int i = 0;
 		for(; i < m_block->size(); i++) {
 			m_block->at(i)->setWord(p_block->getBlock()->at(i)->getWord());
 		}

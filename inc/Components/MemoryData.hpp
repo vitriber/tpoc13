@@ -1,5 +1,5 @@
-#ifndef MEMDADOS_H
-#define MEMDADOS_H
+#ifndef MEMORYDATA_H
+#define MEMORYDATA_H
 
 #include "Block.hpp"
 
