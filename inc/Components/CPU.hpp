@@ -12,8 +12,8 @@ using namespace std;
 namespace Components {
 	class CPU {
 		private:
-			static const char* nameFinalFile;
-			static const char* nameTempFile;
+			static constexpr const char* nameFinalFile = "./output/result.txt";
+			static constexpr const char* nameTempFile = "./output/resultTemp.txt";
 
 			void writeTempFile(string line);
 			Components::MemoryCache* MemoryCache;

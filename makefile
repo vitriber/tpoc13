@@ -22,4 +22,4 @@ main.o: ./src/Components/CPU.cpp ./inc/Components/CPU.hpp ./inc/Components/Memor
 	g++ -w -c ./src/Components/CPU.cpp ./inc/Components/CPU.hpp ./inc/Components/MemoryCache.hpp ./src/Components/MemoryCache.cpp ./src/Components/Block.cpp ./inc/Components/Block.hpp ./src/Components/Word.cpp ./inc/Components/Word.hpp ./src/Components/MemoryData.cpp ./inc/Components/MemoryData.hpp ./src/main.cpp
 
 clean:
-	rm block.o cpu.o memoryCache.o memoryData.o word.o main.o
+	rm block.o cpu.o memoryCache.o memoryData.o word.o main.o Block.hpp.gch CPU.hpp.gch MemoryCache.hpp.gch MemoryData.hpp.gch Word.hpp.gch

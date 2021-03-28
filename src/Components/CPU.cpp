@@ -4,8 +4,6 @@ using namespace std;
 
 namespace Components{
 	CPU::CPU() {
-		this->nameFinalFile = "./output/result.txt";
-		this->nameTempFile = "./output/resultTemp.txt";
 		this->readings=0;
 		this->writings=0;
 		this->misses=0;
